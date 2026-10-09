@@ -175,7 +175,7 @@ export async function loadProfile(): Promise<Profile> {
     }
   }
 
-  const strapiUrl = String(envUrl || 'https://portafolioe.onrender.com').trim().replace(/\/$/, '')
+  const strapiUrl = String(envUrl).trim().replace(/\/$/, '')
   const strapiToken = String(envToken).trim()
 
   if (!strapiUrl) {

@@ -4,7 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  STRAPI_URL = "https://portafolioe.onrender.com"
+  SECRETS_SCAN_OMIT_KEYS = "STRAPI_URL"
 
 # Reglas de caché y headers recomendados para sitios estáticos en Netlify
 [[headers]]
