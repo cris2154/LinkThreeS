@@ -1,0 +1,25 @@
+/* The reference's dotted, grainy background and diagonal violet light. */
+.violet-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: radial-gradient(ellipse at 65% 90%, #36154c55, transparent 70%), #0d0a13; pointer-events: none; }
+.violet-background::before, .violet-background::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.violet-background::before { z-index: 2; background: url('./grain.svg') repeat; background-size: 54px 54px; opacity: .065; mix-blend-mode: screen; }
+.violet-background::after { z-index: 3; background-image: radial-gradient(circle, #bb7bff48 .3px, transparent .45px); background-size: 6px 6px; mask-image: linear-gradient(#000c, #0008 55%, #0003); }
+/* Independent, soft ribbons with different angles, phases and travel times. */
+.violet-background span { position: absolute; inset: -35%; background: radial-gradient(ellipse at 50% 50%, #7036e62a, transparent 60%); animation: vb-ribbon-drift var(--vb-duration-one, 19s) ease-in-out infinite; }
+.violet-background span::before, .violet-background span::after { content: ''; position: absolute; left: -20%; top: 45%; width: 140%; height: clamp(65px, 13vh, 160px); border-radius: 50%; background: radial-gradient(ellipse, #ad83ff75 0%, #7e48ff50 14%, #6135cf20 38%, transparent 70%); transform: rotate(-32deg); }
+.violet-background span::after { top: 68%; height: clamp(35px, 7vh, 90px); transform: rotate(-18deg); opacity: .55; }
+.violet-background span:nth-child(2) { inset: -30%; background: radial-gradient(ellipse at 65% 40%, #593bea20, transparent 60%); animation-name: vb-ribbon-cross; animation-duration: var(--vb-duration-two, 27s); animation-delay: var(--vb-delay-two, -11s); }
+.violet-background span:nth-child(2)::before { top: 33%; transform: rotate(-49deg); height: clamp(50px, 9vh, 120px); background: radial-gradient(ellipse, #9f8dff85, #634cff40 20%, #5232af15 45%, transparent 70%); }
+.violet-background span:nth-child(2)::after { top: 53%; transform: rotate(-12deg); opacity: .35; }
+.violet-background span:nth-child(3) { inset: -35%; background: none; animation-name: vb-ribbon-wander; animation-duration: var(--vb-duration-three, 23s); animation-delay: var(--vb-delay-three, -17s); }
+.violet-background span:nth-child(3)::before { top: 76%; transform: rotate(-25deg); opacity: .6; height: clamp(100px, 18vh, 220px); }
+.violet-background span:nth-child(3)::after { top: 20%; transform: rotate(-16deg); opacity: .4; }
+@keyframes vb-ribbon-drift { 0%, 100% { transform: translate(-5%, 5%) rotate(-5deg); opacity: .75; } 36% { transform: translate(9%, -9%) rotate(6deg); opacity: 1; } 72% { transform: translate(-7%, -2%) rotate(1deg); opacity: .65; } }
+@keyframes vb-ribbon-cross { 0%, 100% { transform: translate(7%, -5%) rotate(3deg); opacity: .8; } 43% { transform: translate(-9%, 11%) rotate(-8deg); opacity: .5; } 78% { transform: translate(3%, 3%) rotate(7deg); opacity: 1; } }
+@keyframes vb-ribbon-wander { 0%, 100% { transform: translate(-6%, -8%) rotate(6deg); opacity: .5; } 29% { transform: translate(8%, 5%) rotate(-4deg); opacity: .9; } 68% { transform: translate(2%, -4%) rotate(2deg); opacity: .7; } }
+
+.violet-background[data-paused="true"] > span { animation-play-state: paused; }
+.violet-background[data-texture="false"]::before { display: none; }
+.violet-background[data-dots="false"]::after { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .violet-background > span { animation: none; }
+}

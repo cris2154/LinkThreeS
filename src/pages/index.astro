@@ -1,0 +1,32 @@
+---
+import App from '../App'
+import { loadProfile } from '../lib/load-profile'
+import '../styles.css'
+
+export const prerender = true
+
+const profile = await loadProfile()
+---
+<!doctype html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d0a13" />
+    <meta name="description" content={profile.bio} />
+    <title>{profile.name}</title>
+    <link rel="icon" type="image/svg+xml" href={`favicon.svg`} />
+  </head>
+  <body>
+    <App profile={profile} />
+    <script>
+      import { initializePage } from '../scripts/page-ui'
+      initializePage({
+        selector: '.profile-section > *, #links > .whatsapp-card, #links > .mb-5, .link-card, .closing-note',
+        readyClass: 'motion-ready',
+        visibleClass: 'motion-visible',
+        threshold: .12,
+      })
+    </script>
+  </body>
+</html>

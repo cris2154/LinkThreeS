@@ -1,0 +1,13 @@
+node_modules
+dist
+*.local
+.env
+.env.*
+!.env.example
+.vscode
+respaldo-vite-antes-astro.zip
+INTEGRACION_CMS_STRAPI.md
+.astro
+AGENTS.md
+BackgroundsReutilizables
+.agents
