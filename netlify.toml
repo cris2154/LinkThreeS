@@ -3,7 +3,7 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "22"
   STRAPI_URL = "https://portafolioe.onrender.com"
 
 # Reglas de caché y headers recomendados para sitios estáticos en Netlify
