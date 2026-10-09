@@ -1,3 +1,5 @@
+import Lenis from 'lenis'
+
 interface EntranceOptions {
   selector: string
   readyClass: string
@@ -5,8 +7,23 @@ interface EntranceOptions {
   threshold: number
 }
 
+export function initSmoothScroll() {
+  if (typeof window === 'undefined') return undefined
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+  if (reduced.matches) return undefined
+
+  return new Lenis({
+    autoRaf: true,
+    smoothWheel: true,
+    syncTouch: true,
+    syncTouchLerp: 0.085,
+    touchMultiplier: 1.15,
+  })
+}
+
 // Small native script: static profile and links do not need React hydration.
 export function initializePage({ selector, readyClass, visibleClass, threshold }: EntranceOptions) {
+  const lenis = initSmoothScroll()
   const dialog = document.querySelector<HTMLDialogElement>('dialog')
   const notice = dialog?.querySelector<HTMLElement>('[data-notice]')
   document.addEventListener('click', event => {
@@ -51,6 +68,7 @@ export function initializePage({ selector, readyClass, visibleClass, threshold }
   }
   reduced.addEventListener('change', () => {
     if (!reduced.matches) return
+    lenis?.destroy()
     observer.disconnect()
     blocks.forEach(block => block.classList.remove(readyClass, visibleClass))
   })

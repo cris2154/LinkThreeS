@@ -23,7 +23,3 @@
 @media (prefers-reduced-motion: reduce) {
   .violet-background > span { animation: none; }
 }
-
-@media (max-width: 768px) {
-  .violet-background span { animation: none; transform: translate3d(0, 0, 0); }
-}

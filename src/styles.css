@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root { font-family: 'Segoe UI', Arial, sans-serif; color: #30253d; background: #f1edf8; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; --muted: #655673; --line: #ffffffb3; --surface: #faf6ff; --accent: #c5a0ff; --glass: #ffffff5c; --glass-shadow: 0 12px 35px #51337910, inset 0 1px 0 #ffffffed, inset 0 -1px 0 #ffffff50; color-scheme: light; }
