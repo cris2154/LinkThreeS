@@ -51,10 +51,10 @@ footer { border-color: var(--line); }
 .notice-dialog::backdrop { background: #1c112a66; backdrop-filter: blur(4px); }
 .skip-link { position: fixed; z-index: 10; left: 20px; top: -80px; background: var(--surface); padding: 12px; border-radius: 8px; }
 .skip-link:focus { top: 15px; }
-.social-dock { width: fit-content; max-width: 100%; flex-wrap: wrap; margin-inline: auto; padding: 7px; border: 1px solid var(--line); border-radius: 999px; background: linear-gradient(135deg, #f6efffcc, #e2d6f0b3); box-shadow: var(--glass-shadow); }
-/* A continuous tint avoids backdrop-filter compositing seams around the buttons. */
+.social-dock { width: fit-content; max-width: 100%; flex-wrap: wrap; margin-inline: auto; padding: 7px; border: 1px solid var(--line); border-radius: 999px; background: linear-gradient(135deg, #f6efffcc, #e2d6f0b3); box-shadow: var(--glass-shadow); contain: paint; transform: translateZ(0); }
+/* El fondo continuo evita cortes de composición y costuras visuales entre botones */
 .dark .social-dock { background: linear-gradient(135deg, #655075b3, #3d2b50cc); }
-.social-dock .icon-button { background: #ffffff20; box-shadow: inset 0 1px 0 #ffffff66; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.social-dock .icon-button { background: #ffffff20; box-shadow: inset 0 1px 0 #ffffff66; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 @media (min-width: 1024px) { .social-dock { margin-inline: 0; } }
 @media (max-width: 639px) {
   .page-shell { padding-inline: 18px; }
@@ -102,16 +102,20 @@ footer { border-color: var(--line); }
 
 
 
-.page-shell { position: relative; isolation: isolate; -webkit-overflow-scrolling: touch; transform: translateZ(0); }
+.page-shell { position: relative; isolation: isolate; -webkit-overflow-scrolling: touch; }
 .link-card, .whatsapp-card { transform: translateZ(0); backface-visibility: hidden; contain: layout paint; }
 
 @media (max-width: 768px) {
-  .link-card, .icon-button, .share-button, .availability {
+  .link-card, .share-button, .availability {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
   }
   .whatsapp-card {
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
+  }
+  .social-dock .icon-button {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 }
