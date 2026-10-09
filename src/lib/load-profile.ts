@@ -25,19 +25,48 @@ function normalizeIcon(rawRed: unknown): LinkIcon {
   if (val === 'youtube') return 'youtube'
   if (val === 'tiktok') return 'tiktok'
   if (val === 'facebook') return 'facebook'
-  if (val === 'portfolio' || val === 'portafolio' || val === 'web') return 'portfolio'
+  if (val === 'portfolio' || val === 'portafolio' || val === 'web' || val === 'otro' || val === 'other') return 'portfolio'
   if (val === 'whatsapp' || val === 'wasap' || val === 'wsp' || val === 'numero' || val === 'telefono') return 'whatsapp'
   if (val === 'cv' || val === 'curriculum' || val === 'resume') return 'cv'
   if (val === 'correo' || val === 'email' || val === 'mail') return 'mail'
-  return 'other'
+  return 'portfolio'
 }
 
 function sanitizeUrl(rawUrl: unknown): string {
   if (typeof rawUrl !== 'string') return ''
-  const trimmed = rawUrl.trim()
+  let trimmed = rawUrl.trim()
+  if (!trimmed) return ''
+
+  // Corregir https:/ o http:/ con una sola barra
+  if (/^https?:\/[^\/]/i.test(trimmed)) {
+    trimmed = trimmed.replace(/^(https?):\/+/i, '$1://')
+  }
+
+  // Email sin prefijo mailto:
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+    return `mailto:${trimmed}`
+  }
+
+  // URL relativa de protocolo //
+  if (trimmed.startsWith('//')) {
+    return `https:${trimmed}`
+  }
+
+  // URL con protocolo válido ya especificado
   if (/^(https?:\/\/|mailto:|tel:)/i.test(trimmed)) {
     return trimmed
   }
+
+  // Enlace con www. o dominio reconocido (ej: www.linkedin.com/..., linkedin.com/...)
+  if (/^(www\.|[a-zA-Z0-9-]+\.(?:com|org|net|io|dev|me|co|app|pe|es|lat)\b)/i.test(trimmed)) {
+    return `https://${trimmed}`
+  }
+
+  // Cualquier URL sin protocolo tipo host/path
+  if (/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/i.test(trimmed)) {
+    return `https://${trimmed}`
+  }
+
   return ''
 }
 
@@ -146,7 +175,7 @@ export async function loadProfile(): Promise<Profile> {
     }
   }
 
-  const strapiUrl = String(envUrl).trim().replace(/\/$/, '')
+  const strapiUrl = String(envUrl || 'https://portafolioe.onrender.com').trim().replace(/\/$/, '')
   const strapiToken = String(envToken).trim()
 
   if (!strapiUrl) {
