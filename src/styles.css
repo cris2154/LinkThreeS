@@ -83,22 +83,12 @@ footer { border-color: var(--line); }
   .dark .whatsapp-card { background: #57357b; }
 }
 @media (max-width: 1023px) { .editorial-note { display: none; } }
-.motion-ready:not(.motion-visible) { opacity: 0; }
-.motion-visible { animation: glass-arrive 850ms ease-out backwards; }
-.profile-section > p.motion-visible, .profile-section > h1.motion-visible, #links > .mb-5.motion-visible { animation-name: text-arrive; }
-.profile-section > :nth-child(2) { animation-delay: 80ms; }
-.profile-section > :nth-child(3) { animation-delay: 140ms; }
-.profile-section > :nth-child(4) { animation-delay: 180ms; }
-.profile-section > :nth-child(n+5) { animation-delay: 220ms; }
-.link-card:nth-child(2) { animation-delay: 70ms; }
-.link-card:nth-child(3) { animation-delay: 140ms; }
-.link-card:nth-child(4) { animation-delay: 210ms; }
-@keyframes glass-arrive { from { opacity: 0; } to { opacity: 1; } }
-@keyframes text-arrive { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.motion-ready:not(.motion-visible) { opacity: 0; transform: translateY(6px); }
+.motion-visible { opacity: 1; transform: none; transition: opacity 280ms ease-out, transform 280ms ease-out; }
 .avatar-spark { animation: sparkle-breathe 5s ease-in-out infinite; }
 @keyframes sparkle-breathe { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
-.motion-ready:focus-within { opacity: 1; animation: none; }
-.motion-paused .motion-ready { opacity: 1; animation: none; }
+.motion-ready:focus-within { opacity: 1; transform: none; }
+.motion-paused .motion-ready { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .motion-ready:not(.motion-visible) { opacity: 1; }
   .motion-control { display: none; }
@@ -112,4 +102,16 @@ footer { border-color: var(--line); }
 
 
 
-.page-shell { position: relative; isolation: isolate; }
+.page-shell { position: relative; isolation: isolate; -webkit-overflow-scrolling: touch; transform: translateZ(0); }
+.link-card, .whatsapp-card { transform: translateZ(0); backface-visibility: hidden; contain: layout paint; }
+
+@media (max-width: 768px) {
+  .link-card, .icon-button, .share-button, .availability {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .whatsapp-card {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}

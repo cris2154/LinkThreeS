@@ -37,10 +37,17 @@ export function initializePage({ selector, readyClass, visibleClass, threshold }
       entry.target.classList.add(visibleClass)
       observer.unobserve(entry.target)
     }
-  }, { threshold })
+  }, { threshold: threshold || 0, rootMargin: '350px 0px' })
+
+  const vh = window.innerHeight || 800
   for (const block of blocks) {
-    block.classList.add(readyClass)
-    observer.observe(block)
+    const rect = block.getBoundingClientRect()
+    if (rect.top <= vh + 200) {
+      block.classList.add(visibleClass)
+    } else {
+      block.classList.add(readyClass)
+      observer.observe(block)
+    }
   }
   reduced.addEventListener('change', () => {
     if (!reduced.matches) return

@@ -1,7 +1,7 @@
 /* The reference's dotted, grainy background and diagonal violet light. */
-.violet-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: radial-gradient(ellipse at 65% 90%, #36154c55, transparent 70%), #0d0a13; pointer-events: none; }
+.violet-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: radial-gradient(ellipse at 65% 90%, #36154c55, transparent 70%), #0d0a13; pointer-events: none; contain: strict; transform: translateZ(0); will-change: transform; }
 .violet-background::before, .violet-background::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
-.violet-background::before { z-index: 2; background: url('./grain.svg') repeat; background-size: 54px 54px; opacity: .065; mix-blend-mode: screen; }
+.violet-background::before { z-index: 2; background: url('./grain.svg') repeat; background-size: 54px 54px; opacity: .04; }
 .violet-background::after { z-index: 3; background-image: radial-gradient(circle, #bb7bff48 .3px, transparent .45px); background-size: 6px 6px; mask-image: linear-gradient(#000c, #0008 55%, #0003); }
 /* Independent, soft ribbons with different angles, phases and travel times. */
 .violet-background span { position: absolute; inset: -35%; background: radial-gradient(ellipse at 50% 50%, #7036e62a, transparent 60%); animation: vb-ribbon-drift var(--vb-duration-one, 19s) ease-in-out infinite; }
@@ -22,4 +22,8 @@
 .violet-background[data-dots="false"]::after { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .violet-background > span { animation: none; }
+}
+
+@media (max-width: 768px) {
+  .violet-background span { animation: none; transform: translate3d(0, 0, 0); }
 }

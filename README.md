@@ -1,42 +1,41 @@
-# Mi Link — Liquid Glass · Astro SSG
+# Link de Redes con Astro SSG & Headless Architecture
 
-Sitio estático con Astro, componentes React, TypeScript y Tailwind CSS. Conserva el diseño para móvil y PC.
+Un hub de enlaces y perfil profesional para no tener que pagarle 10 dólares al mes a Linktree por cambiar el color de un botón. Construido con **Astro**, **React 19**, **Tailwind CSS v4** y alimentado por **Strapi CMS** en tiempo de compilación. Rápido, minimalista y con estética de cristal oscuro.
 
-## Ejecutar
+---
 
-Requiere Node.js 22.12 o superior.
+## Arquitectura del Sistema
 
-```powershell
-cd "$env:USERPROFILE\Documents\mi-link"
-npm install
-npm run dev -- --port 5174
-```
+El ecosistema sigue la filosofía Jamstack: pagar un servidor dedicado solo para mostrar seis links y un botón de WhatsApp es un crimen financiero. Aquí compilamos el HTML una sola vez y dejamos que el CDN de Netlify sufra con las visitas.
 
-## Personalizar
+![Arquitectura del Sistema](./assets/architecture.jpg)
 
-Edita `src/profile.ts`: nombre, biografía, redes, correo, WhatsApp y foto. Los enlaces vacíos muestran un aviso. Guarda una foto en `public/foto.jpg` y usa `photo: '/foto.jpg'`. Si publicas bajo una subcarpeta, adapta también las rutas de las imágenes al `base` configurado.
+### Como funciona:
 
-## Compilar y publicar
+1. **Strapi Headless CMS (Backend en Render):**
+   - Es la única fuente de verdad. Centraliza el nombre, biografía, redes sociales, enlaces a proyectos y el PDF del currículum alojado en Cloudinary.
+   - Alimenta tanto a este sitio de enlaces como al Portafolio principal.
+   - Vive en el tier gratuito de Render (sí, ese que se duerme a los 15 minutos de inactividad como tú los lunes por la mañana). Pero da igual: como usamos SSG, el visitante nunca se come los 50 segundos de cold start; solo el build de Netlify habla con él.
 
-```powershell
-npm run build
-npm run preview
-```
+2. **Astro SSG (Static Site Generation):**
+   - En tiempo de compilación (`build time`), Astro despierta a Strapi, descarga los datos con `loadProfile()` y genera archivos HTML/CSS/JS 100% planos dentro de `dist/`.
+   - **Cero sobrecarga de cliente:** El navegador no tiene que descargar 2 MB de JavaScript ni hidratar cosas absurdas para renderizar un párrafo. Si la máquina del visitante es una laptop del gobierno de 2012 con 2GB de RAM, la web abre igual de instantánea.
 
-El build ejecuta `astro check` y genera `dist/index.html` y sus recursos. Publica **todo el contenido de dist/** en un alojamiento estático. No requiere servidor Node en producción ni adaptador SSR. `preview` permite revisar el resultado de producción localmente.
+3. **Automatización con Webhooks (Strapi a Netlify):**
+   - Cada vez que editas o agregas una red social en Strapi y le das a guardar, Strapi le manda un golpe (HTTP POST) al Build Hook de Netlify.
+   - Netlify compila la nueva versión estática y la reparte por todo el mundo en su Edge CDN en unos 30 segundos sin que tengas que tocar una sola terminal.
 
-El perfil, las cartas/enlaces y los metadatos ya vienen en el HTML generado. No se hidrata toda la página. El fondo morado se renderiza durante el build y se anima con CSS, sin hidratar React. Un script pequeño maneja el diálogo y las entradas al aparecer en pantalla. Se conservan hover, teclado y movimiento reducido.
+---
 
-## Archivos
+## Automatizacion con Webhooks (Strapi y Netlify)
 
-- `src/pages/index.astro`: página, metadatos y composición SSG.
-- `src/App.tsx`: contenido React renderizado como HTML estático.
-- `src/profile.ts`: datos y tipos del perfil.
-- `src/scripts/page-ui.ts`: diálogo y animaciones de entrada con IntersectionObserver.
-- `src/styles.css`: diseño responsive y estados hover.
-- `src/components/VioletBackground/`: fondo reutilizable.
-- `INTEGRACION_CMS_STRAPI.md`: integración propuesta al compilar, con secretos fuera del navegador.
+Para que no tengas que tocar la terminal cada vez que cambias un enlace:
 
-Se guardó la versión previa en `respaldo-vite-antes-astro.zip`. Para recuperarla, extrae el ZIP en otra carpeta e instala sus dependencias.
-
-Astro usa Vite internamente; el proyecto ya no utiliza una entrada SPA ni `createRoot`.
+1. **En Netlify:**
+   - Ve a `Site configuration` ➔ `Build & deploy` ➔ `Continuous deployment` ➔ **Build hooks**.
+   - Crea un hook llamado `Strapi Auto Deploy` asignado a la rama `main` y copia la URL secreta que te da.
+2. **En Strapi:**
+   - Entra a `Settings` ➔ `Webhooks` ➔ **+ Create new webhook**.
+   - Ponle de nombre `Netlify Deploy` y pega la URL del Build Hook.
+   - En **Entry**, marca `create`, `update`, `delete`, `publish` y `unpublish`. Guarda los cambios.
+   - Ahora, cada vez que le des a "Save" en Strapi, Netlify reconstruira el sitio en silencio mientras tu tomas cafe.
